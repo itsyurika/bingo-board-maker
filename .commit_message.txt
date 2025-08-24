@@ -1,0 +1,1 @@
+feat(init): initialize bingo board maker project with Vite and React
