@@ -1,7 +1,7 @@
 .header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
 .title {
@@ -32,6 +32,20 @@
 
 @media (max-width: 768px) {
   .title {
+    font-size: 1.8rem;
+  }
+  
+  .subtitle {
+    font-size: 1.4rem;
+  }
+  
+  .instructions {
+    font-size: 0.85rem;
+  }
+}
+
+@media print {
+  .title {
     font-size: 2rem;
   }
   
@@ -41,6 +55,5 @@
   
   .instructions {
     font-size: 0.9rem;
-    padding: 0 1rem;
   }
 }

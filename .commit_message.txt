@@ -1,1 +1,1 @@
-feat(core): implement board generation and PDF export utilities
+feat(app): enhance state management and user experience with loading states and feedback

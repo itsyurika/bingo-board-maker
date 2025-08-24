@@ -18,11 +18,25 @@ import jsPDF from 'jspdf'
  * await exportToPdf(boardRef.current, 'Priceline-Summer-Party-Bingo')
  */
 export async function exportToPdf(boardElement, filename = 'Bingo-Board') {
+  console.log('exportToPdf called with:', { boardElement, filename })
+  
   if (!boardElement) {
+    console.error('Board element is null or undefined')
     throw new Error('Board element is required for PDF export')
   }
 
+  console.log('Board element details:', {
+    tagName: boardElement.tagName,
+    className: boardElement.className,
+    offsetWidth: boardElement.offsetWidth,
+    offsetHeight: boardElement.offsetHeight,
+    clientWidth: boardElement.clientWidth,
+    clientHeight: boardElement.clientHeight
+  })
+
   try {
+    console.log('Starting html2canvas capture...')
+    
     // Configure html2canvas for high quality screenshot
     const canvas = await html2canvas(boardElement, {
       scale: 2, // Higher resolution for better PDF quality
@@ -33,6 +47,11 @@ export async function exportToPdf(boardElement, filename = 'Bingo-Board') {
       height: boardElement.offsetHeight,
       scrollX: 0,
       scrollY: 0
+    })
+    
+    console.log('html2canvas completed. Canvas dimensions:', {
+      width: canvas.width,
+      height: canvas.height
     })
 
     // Convert canvas to image data

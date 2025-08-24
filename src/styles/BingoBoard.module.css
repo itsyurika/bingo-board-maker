@@ -1,32 +1,58 @@
+.boardContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  border: 3px solid #1a202c;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.headerSection {
+  padding: 1.5rem 2rem 1rem 2rem;
+  border-bottom: 2px solid #1a202c;
+  background-color: #f8fafc;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
-  max-width: 800px;
-  margin: 0 auto;
   aspect-ratio: 1 / 1;
-  border: 3px solid #1a202c;
   background-color: white;
 }
 
 @media (max-width: 900px) {
-  .board {
+  .boardContainer {
     max-width: 90vw;
     margin: 0 auto;
+  }
+  
+  .headerSection {
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
   }
 }
 
 @media (max-width: 600px) {
-  .board {
+  .boardContainer {
     max-width: 95vw;
+  }
+  
+  .headerSection {
+    padding: 0.75rem 1rem 0.5rem 1rem;
   }
 }
 
 @media print {
-  .board {
+  .boardContainer {
     max-width: 7.5in;
     margin: 0.5in auto;
     page-break-inside: avoid;
     border-color: #000;
+    border-radius: 0;
+  }
+  
+  .headerSection {
+    border-bottom-color: #000;
+    background-color: transparent;
   }
 }
