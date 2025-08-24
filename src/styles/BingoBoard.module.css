@@ -1,16 +1,18 @@
 .boardContainer {
   max-width: 800px;
   margin: 0 auto;
-  background-color: white;
-  border: 3px solid #1a202c;
-  border-radius: 8px;
+  background: var(--white);
+  border: 2px solid var(--gray-200);
   overflow: hidden;
+  box-shadow: var(--shadow-md);
+  position: relative;
 }
 
 .headerSection {
-  padding: 1.5rem 2rem 1rem 2rem;
-  border-bottom: 2px solid #1a202c;
-  background-color: #f8fafc;
+  padding: 2rem 2rem 1.5rem 2rem;
+  background: var(--gray-50);
+  border-bottom: 2px solid var(--gray-200);
+  position: relative;
 }
 
 .board {
@@ -18,17 +20,19 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
   aspect-ratio: 1 / 1;
-  background-color: white;
+  background: var(--white);
+  position: relative;
 }
 
 @media (max-width: 900px) {
   .boardContainer {
     max-width: 90vw;
     margin: 0 auto;
+    box-shadow: var(--shadow-md);
   }
   
   .headerSection {
-    padding: 1rem 1.5rem 0.75rem 1.5rem;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
   }
 }
 
@@ -38,7 +42,7 @@
   }
   
   .headerSection {
-    padding: 0.75rem 1rem 0.5rem 1rem;
+    padding: 1.25rem 1rem 1rem 1rem;
   }
 }
 
@@ -47,12 +51,13 @@
     max-width: 7.5in;
     margin: 0.5in auto;
     page-break-inside: avoid;
-    border-color: #000;
-    border-radius: 0;
+    border: 2px solid var(--gray-800);
+    box-shadow: none;
+    background: var(--white);
   }
   
   .headerSection {
-    border-bottom-color: #000;
-    background-color: transparent;
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-300);
   }
 }

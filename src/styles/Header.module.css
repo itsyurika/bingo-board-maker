@@ -5,55 +5,64 @@
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #1a202c;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--black);
   margin: 0 0 0.5rem 0;
   line-height: 1.2;
 }
 
 .subtitle {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 0 0 1rem 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 500;
+  color: var(--gray-800);
+  margin: 0 0 1.5rem 0;
   line-height: 1.3;
 }
 
 .instructions {
-  font-size: 1rem;
-  color: #4a5568;
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  color: var(--gray-500);
   margin: 0;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.5;
+  font-weight: 400;
 }
 
 @media (max-width: 768px) {
   .title {
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    margin-bottom: 0.4rem;
   }
   
   .subtitle {
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    margin-bottom: 1.25rem;
   }
   
   .instructions {
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
   }
 }
 
 @media print {
   .title {
-    font-size: 2rem;
+    font-size: 2.2rem;
+    color: var(--black);
   }
   
   .subtitle {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    color: var(--gray-800);
   }
   
   .instructions {
     font-size: 0.9rem;
+    color: var(--gray-500);
   }
 }
