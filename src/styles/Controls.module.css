@@ -53,40 +53,40 @@
 
 
 .uploadButton {
-  background: var(--gray-800);
+  background: #1e40af;
   color: var(--white);
   font-size: 1rem;
   padding: 1rem 2rem;
   font-weight: 700;
-  border: 2px solid var(--gray-800);
+  border: 2px solid #1e40af;
 }
 
 .uploadButton:hover:not(:disabled) {
-  background: var(--gray-700);
-  border-color: var(--gray-700);
+  background: #1e3a8a;
+  border-color: #1e3a8a;
 }
 
 .recreateButton {
   background: var(--white);
-  color: var(--gray-800);
-  border: 2px solid var(--gray-300);
+  color: #1d4ed8;
+  border: 2px solid #93c5fd;
 }
 
 .recreateButton:hover:not(:disabled) {
-  background: var(--gray-50);
-  border-color: var(--gray-400);
-  color: var(--gray-900);
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1e40af;
 }
 
 .downloadButton {
-  background: var(--gray-600);
+  background: #374151;
   color: var(--white);
-  border: 2px solid var(--gray-600);
+  border: 2px solid #374151;
 }
 
 .downloadButton:hover:not(:disabled) {
-  background: var(--gray-700);
-  border-color: var(--gray-700);
+  background: #1f2937;
+  border-color: #1f2937;
 }
 
 .hiddenInput {

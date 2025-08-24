@@ -1,1 +1,1 @@
-refactor(controls): add consistent neutral button colors and hover effects
+refactor(design): update buttons to use cohesive blue color palette
