@@ -1,0 +1,32 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  max-width: 800px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border: 3px solid #1a202c;
+  background-color: white;
+}
+
+@media (max-width: 900px) {
+  .board {
+    max-width: 90vw;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .board {
+    max-width: 95vw;
+  }
+}
+
+@media print {
+  .board {
+    max-width: 7.5in;
+    margin: 0.5in auto;
+    page-break-inside: avoid;
+    border-color: #000;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "personal": [
+    "has traveled to more than 5 countries",
+    "speaks more than 2 languages",
+    "has run a marathon",
+    "owns more than 3 pets",
+    "can play a musical instrument",
+    "has appeared on TV",
+    "has been skydiving",
+    "knows how to juggle",
+    "has met a celebrity"
+  ],
+  "company": [
+    "has worked here for over 5 years",
+    "has given a presentation to executives",
+    "leads a team of more than 10 people",
+    "has traveled for work internationally",
+    "has won an internal award",
+    "mentors other employees",
+    "has presented at a conference",
+    "speaks at company events",
+    "has been featured in company newsletter"
+  ],
+  "random": [
+    "has been to all 7 continents",
+    "can solve a Rubik's cube",
+    "has climbed a mountain",
+    "knows sign language",
+    "has been on a cruise",
+    "can cook without recipes",
+    "has won a contest",
+    "has been in a movie",
+    "can do a backflip",
+    "has written a book"
+  ]
+}

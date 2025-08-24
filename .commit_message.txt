@@ -1,1 +1,1 @@
-feat(init): initialize bingo board maker project with Vite and React
+feat(core): implement board generation and PDF export utilities

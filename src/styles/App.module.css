@@ -1,0 +1,66 @@
+.app {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.boardSection {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #718096;
+}
+
+.emptyStateTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #4a5568;
+}
+
+.emptyStateText {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem 0.5rem;
+  }
+  
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+  
+  .emptyStateTitle {
+    font-size: 1.3rem;
+  }
+  
+  .emptyStateText {
+    font-size: 0.9rem;
+  }
+}
+
+@media print {
+  .app {
+    background-color: white;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: none;
+  }
+}
