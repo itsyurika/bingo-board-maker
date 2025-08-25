@@ -11,6 +11,13 @@ function App() {
   const [boardTiles, setBoardTiles] = useState([])
   const [originalFileName, setOriginalFileName] = useState('')
   
+  // Header customization state
+  const [headerText, setHeaderText] = useState({
+    title: "🌞 2025 Priceline Summer Party 🏖️",
+    instructions: "You can use the same person only twice and can't use your own name! ✨",
+    subtitle: "🔍 Find someone who..."
+  })
+  
   // UI state management  
   const [isLoading, setIsLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState('')
@@ -69,6 +76,16 @@ function App() {
       generatedAt: null,
       version: 1
     })
+  }, [])
+
+  /**
+   * Update header text values
+   */
+  const updateHeaderText = useCallback((field, value) => {
+    setHeaderText(prev => ({
+      ...prev,
+      [field]: value
+    }))
   }, [])
 
   /**
@@ -285,11 +302,18 @@ function App() {
           loadingState={loadingState}
           error={error}
           successMessage={successMessage}
+          headerText={headerText}
+          onHeaderTextChange={updateHeaderText}
         />
 
         <div className={styles.boardSection}>
           {boardTiles.length > 0 ? (
-            <BingoBoard ref={boardRef} tiles={boardTiles} includeHeader={true} />
+            <BingoBoard 
+              ref={boardRef} 
+              tiles={boardTiles} 
+              includeHeader={true}
+              headerText={headerText}
+            />
           ) : (
             <div className={styles.emptyState}>
               <h3 className={styles.emptyStateTitle}>Ready to Create Your Bingo Board!</h3>
@@ -297,7 +321,12 @@ function App() {
                 Upload a JSON file with categorized prompts to generate your custom bingo board.
               </p>
               <br />
-              <BingoBoard ref={previewRef} tiles={sampleTiles} includeHeader={true} />
+              <BingoBoard 
+                ref={previewRef} 
+                tiles={sampleTiles} 
+                includeHeader={true}
+                headerText={headerText}
+              />
               <p className={styles.emptyStateText}>
                 <em>↑ Preview with sample data</em>
               </p>

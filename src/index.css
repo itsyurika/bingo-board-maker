@@ -1,5 +1,5 @@
-/* Import clean, modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Import clean, modern fonts and playful fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fredoka:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* Black & White Color Palette */
@@ -18,6 +18,7 @@
   
   /* Typography */
   --font-heading: 'Inter', sans-serif;
+  --font-playful: 'Fredoka', cursive;
   --font-body: 'Inter', sans-serif;
   
   /* Spacing & Sizing */

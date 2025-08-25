@@ -6,8 +6,8 @@
     "Enjoys gardening and has a green thumb",
     "Has written a blog or published article",
     "Has completed a triathlon",
-    "Has been skydiving or bungee jumping",
-    "Is a certified scuba diver or yoga instructor",
+    "Has run a marathon",
+    "Has done skydiving or bungee jumping",
     "Has performed on a stage (acting, singing, stand-up, etc.)",
     "Has traveled to more than 4 continents",
     "Has lived in another country for more than a year",
@@ -17,19 +17,16 @@
     "Has been to a Blue Jays game this season",
     "Has seen the Northern Lights",
     "Has taken a road trip to Montreal or Ottawa",
-    "Has a commute that is over 1 hour long",
     "Has built their own PC",
-    "Has won a trophy or medal in a competition (sports or otherwise)",
-    "Has been to a Raptors or Maple Leafs game",
+    "Has won a trophy or medal in a competition",
     "Has visited one of Canada's National Parks (like Banff or Jasper)",
-    "Has been camping this summer (since June)",
+    "Has been camping this summer",
     "Holds a passport from more than one country (is a dual citizen)",
-    "Has visited at least 5 Canadian provinces"
+    "Has visited at least 4 Canadian provinces"
   ],
   "random": [
-    "Has been on a reality TV show",
-    "Can do a handstand for more than 10 seconds",
-    "Has never been on an airplane",
+    "Has met a celebrity",
+    "Has never ridden a bicycle",
     "Can name all 10 Canadian provinces",
     "Has been to a live taping of a TV show",
     "Can whistle really loudly",
@@ -46,12 +43,12 @@
     "Enjoys pineapple on pizza",
     "Has the same shoe size as you",
     "Prefers mountains over a beach for vacation",
-    "Has never had a cavity"
+    "Has never had a cavity",
+    "Has the same star sign as you"
   ],
   "company": [
-    "Has worked at Priceline for more than 2 years",
     "Has attended a company hackathon",
-    "Has been to more than 2 different offices",
+    "Has been to more than 2 different Priceline offices",
     "Has been on the planning committee for a company event",
     "Has won a company award or recognition",
     "Has been featured in company communications",
@@ -64,6 +61,8 @@
     "Used Priceline to book their vacation",
     "Has a professional certification (like a PMP, CFA, etc.)",
     "Was hired in the same month as you (any year)",
-    "Is wearing a Priceline blue colored outfit"
+    "Is wearing a Priceline blue colored outfit",
+    "Has a commute that is over 1 hour long",
+    "Knows when Priceline was founded"
   ]
 }

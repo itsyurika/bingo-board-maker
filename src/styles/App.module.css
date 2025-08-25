@@ -1,37 +1,15 @@
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, 
-    var(--cream) 0%, 
-    #fef3c7 25%,
-    #fed7aa 50%,
-    #fef3c7 75%, 
-    var(--cream) 100%
-  );
+  background: var(--gray-50);
   padding: 2rem 1rem;
   position: relative;
   overflow-x: hidden;
 }
 
-.app::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
 .boardSection {
@@ -44,7 +22,7 @@
 .emptyState {
   text-align: center;
   padding: 3rem 2rem;
-  color: var(--medium-gray);
+  color: var(--gray-500);
   background: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
@@ -57,10 +35,7 @@
   font-size: clamp(1.5rem, 3vw, 2.2rem);
   font-weight: 700;
   margin-bottom: 1.5rem;
-  background: var(--summer-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--gray-900);
 }
 
 .emptyStateText {
@@ -68,7 +43,7 @@
   line-height: 1.7;
   max-width: 500px;
   margin: 0 auto 2rem auto;
-  color: var(--medium-gray);
+  color: var(--gray-500);
 }
 
 /* Animations */
@@ -135,9 +110,6 @@
     padding: 0;
   }
   
-  .app::before {
-    display: none;
-  }
   
   .container {
     max-width: none;

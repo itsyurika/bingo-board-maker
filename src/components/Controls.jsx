@@ -11,6 +11,8 @@ import styles from '../styles/Controls.module.css'
  * @param {Object} loadingState - Loading state with message
  * @param {string} error - Current error message
  * @param {string} successMessage - Current success message
+ * @param {Object} headerText - Current header text values
+ * @param {Function} onHeaderTextChange - Callback to update header text
  */
 function Controls({ 
   onFileUpload, 
@@ -19,7 +21,9 @@ function Controls({
   appStatus = {}, 
   loadingState = { isLoading: false, message: '' },
   error = null,
-  successMessage = null
+  successMessage = null,
+  headerText = {},
+  onHeaderTextChange
 }) {
   const fileInputRef = useRef(null)
 
@@ -78,6 +82,43 @@ function Controls({
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
           {message}
+        </div>
+      )}
+
+      {/* Header Customization */}
+      {onHeaderTextChange && (
+        <div className={styles.headerSection}>
+          <h3 className={styles.sectionTitle}>Customize Header</h3>
+          <div className={styles.inputGroup}>
+            <label className={styles.inputLabel}>Title:</label>
+            <input
+              type="text"
+              value={headerText.title || ''}
+              onChange={(e) => onHeaderTextChange('title', e.target.value)}
+              className={styles.textInput}
+              placeholder="Enter event title..."
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label className={styles.inputLabel}>Instructions:</label>
+            <input
+              type="text"
+              value={headerText.instructions || ''}
+              onChange={(e) => onHeaderTextChange('instructions', e.target.value)}
+              className={styles.textInput}
+              placeholder="Enter instructions..."
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label className={styles.inputLabel}>Subtitle:</label>
+            <input
+              type="text"
+              value={headerText.subtitle || ''}
+              onChange={(e) => onHeaderTextChange('subtitle', e.target.value)}
+              className={styles.textInput}
+              placeholder="Enter subtitle..."
+            />
+          </div>
         </div>
       )}
 

@@ -1,1 +1,1 @@
-refactor(design): update buttons to use cohesive blue color palette
+feat(ui): add header customization inputs for real-time text editing
