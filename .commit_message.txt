@@ -1,1 +1,1 @@
-feat(error-handling): complete Step 7 - comprehensive error handling, validation, and warnings display
+fix(tests): improve PDF export test mocking and fix jsPDF import issues

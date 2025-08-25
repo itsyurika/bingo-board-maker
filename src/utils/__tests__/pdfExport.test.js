@@ -8,7 +8,7 @@ vi.mock('html2canvas', () => ({
 
 // Mock jsPDF
 vi.mock('jspdf', () => ({
-  jsPDF: vi.fn().mockImplementation(() => ({
+  default: vi.fn().mockImplementation(() => ({
     addImage: vi.fn(),
     save: vi.fn(),
     internal: {
@@ -51,6 +51,7 @@ describe('pdfExport', () => {
     mockJsPDF = {
       addImage: vi.fn(),
       save: vi.fn(),
+      setProperties: vi.fn(),
       internal: {
         pageSize: {
           width: 210,
@@ -61,10 +62,10 @@ describe('pdfExport', () => {
 
     // Setup module mocks
     const html2canvas = await import('html2canvas')
-    const { jsPDF } = await import('jspdf')
+    const jsPDF = await import('jspdf')
     
     html2canvas.default.mockResolvedValue(mockCanvas)
-    jsPDF.mockReturnValue(mockJsPDF)
+    jsPDF.default.mockReturnValue(mockJsPDF)
   })
 
   describe('isPdfExportSupported', () => {
@@ -94,8 +95,8 @@ describe('pdfExport', () => {
       })
 
       // Verify PDF creation
-      const { jsPDF } = await import('jspdf')
-      expect(jsPDF).toHaveBeenCalledWith({
+      const jsPDF = await import('jspdf')
+      expect(jsPDF.default).toHaveBeenCalledWith({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
@@ -133,8 +134,8 @@ describe('pdfExport', () => {
 
       await exportToPdf(mockElement)
 
-      const { jsPDF } = await import('jspdf')
-      expect(jsPDF).toHaveBeenCalledWith({
+      const jsPDF = await import('jspdf')
+      expect(jsPDF.default).toHaveBeenCalledWith({
         orientation: 'landscape',
         unit: 'mm',
         format: 'a4'
@@ -152,8 +153,8 @@ describe('pdfExport', () => {
 
       await exportToPdf(mockElement)
 
-      const { jsPDF } = await import('jspdf')
-      expect(jsPDF).toHaveBeenCalledWith({
+      const jsPDF = await import('jspdf')
+      expect(jsPDF.default).toHaveBeenCalledWith({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
@@ -206,8 +207,8 @@ describe('pdfExport', () => {
     })
 
     it('should handle jsPDF creation errors', async () => {
-      const { jsPDF } = await import('jspdf')
-      jsPDF.mockImplementation(() => {
+      const jsPDF = await import('jspdf')
+      jsPDF.default.mockImplementation(() => {
         throw new Error('PDF creation failed')
       })
 
