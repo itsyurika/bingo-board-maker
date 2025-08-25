@@ -96,12 +96,14 @@ npm run preview
 ### Required Dependencies
 
 **Core Dependencies:**
+
 - `react` - UI framework
 - `react-dom` - React DOM rendering
 - `jspdf` - PDF generation
 - `html2canvas` - Screenshot HTML elements
 
 **Development Dependencies:**
+
 - `@testing-library/react` - React component testing
 - `@testing-library/jest-dom` - Additional Jest matchers
 - `vitest` - Testing framework
@@ -336,15 +338,18 @@ deploy development
 ## 🎯 Bingo Board Maker Implementation Steps
 
 ### Step 1: Project Initialization ✅
+
 1. Create React project using Vite
 2. Install required dependencies (jsPDF, html2canvas)
 3. Set up project structure according to architecture above
 4. Configure testing environment with Vitest
 
 ### Step 2: Core Components Development
+
 **Priority: High - Foundation components**
 
 #### 2.1 Header Component (`src/components/Header.jsx`)
+
 - Static component displaying:
   - Main title: "2025 Priceline Summer Party"
   - Subtitle: "Find someone who..."
@@ -353,6 +358,7 @@ deploy development
 - Simple CSS styling for typography
 
 #### 2.2 BingoTile Component (`src/components/BingoTile.jsx`)
+
 - **Props:** `text` (string), `isFreeSpace` (boolean)
 - Renders individual bingo square
 - Special styling for "Free Space" center tile
@@ -360,12 +366,14 @@ deploy development
 - Minimum height for consistent grid layout
 
 #### 2.3 BingoBoard Component (`src/components/BingoBoard.jsx`)
+
 - **Props:** `tiles` (array of 25 strings), `boardRef` (React ref)
 - CSS Grid layout: `grid-template-columns: repeat(5, 1fr)`
 - Maps over tiles array to render BingoTile components
 - Attached ref for PDF screenshot capability
 
 #### 2.4 Controls Component (`src/components/Controls.jsx`)
+
 - **Props:** `onFileUpload`, `onRecreate`, `onDownloadPdf`, `boardIsReady`
 - File input for JSON upload (accept=".json")
 - "Recreate" button for new board generation
@@ -373,9 +381,11 @@ deploy development
 - Proper disabled states based on app state
 
 ### Step 3: Core Logic Implementation
+
 **Priority: High - Business logic**
 
 #### 3.1 Board Generation Utility (`src/utils/boardGenerator.js`)
+
 ```javascript
 /**
  * Generate bingo board from JSON prompts
@@ -393,6 +403,7 @@ function generateBoard(prompts) {
 ```
 
 #### 3.2 PDF Export Utility (`src/utils/pdfExport.js`)
+
 ```javascript
 /**
  * Export bingo board to PDF
@@ -409,77 +420,93 @@ async function exportToPdf(boardElement, filename) {
 ```
 
 ### Step 4: Main App Integration
+
 **Priority: High - State management and coordination**
 
 #### 4.1 App Component State (`src/App.jsx`)
+
 ```javascript
-const [prompts, setPrompts] = useState(null);           // JSON data
-const [boardTiles, setBoardTiles] = useState([]);       // Current board
-const boardRef = useRef(null);                          // PDF export ref
+const [prompts, setPrompts] = useState(null); // JSON data
+const [boardTiles, setBoardTiles] = useState([]); // Current board
+const boardRef = useRef(null); // PDF export ref
 ```
 
 #### 4.2 App Component Functions
+
 - `handleFileUpload(file)` - Parse JSON, validate structure, generate initial board
 - `handleRecreate()` - Generate new board with same prompts
 - `handleDownloadPdf()` - Export current board to PDF
 
 ### Step 5: Styling Implementation
+
 **Priority: Medium - Visual polish**
 
 #### 5.1 CSS Modules Structure
+
 - `App.module.css` - Main layout and container styles
 - `BingoBoard.module.css` - Grid layout, responsive design
 - `BingoTile.module.css` - Tile styling, typography, spacing
-- `Header.module.css` - Title and instruction styling  
+- `Header.module.css` - Title and instruction styling
 - `Controls.module.css` - Button and input styling
 
 #### 5.2 Design Requirements
+
 - **Responsive Design:** Works on desktop and tablet
 - **Print-Friendly:** Clean, high-contrast styling for PDF export
 - **Accessibility:** Proper color contrast, focus states
 - **Typography:** Clear, readable fonts with adequate spacing
 
 ### Step 6: Testing Implementation
+
 **Priority: Medium - Quality assurance**
 
 #### 6.1 Unit Tests
+
 - `boardGenerator.test.js` - Test board generation logic
 - `pdfExport.test.js` - Test PDF functionality (with mocks)
 - Component tests for all React components
 
 #### 6.2 Integration Tests
+
 - File upload workflow
 - Board generation and recreation
 - PDF export process
 
 ### Step 7: Error Handling & Validation
+
 **Priority: Medium - Robustness**
 
 #### 7.1 JSON Validation
+
 - Verify file is valid JSON
 - Check required structure (categories with prompt arrays)
 - Display helpful error messages for invalid files
 
 #### 7.2 Edge Cases
+
 - Empty categories
 - Insufficient prompts (< 24 total)
 - Large prompt text handling
 - Network/browser compatibility issues
 
 ### Step 8: Performance Optimization
+
 **Priority: Low - Polish**
 
 #### 8.1 Optimizations
+
 - Memoize board generation for same prompts
 - Lazy load PDF generation libraries
 - Optimize bundle size for deployment
 
 #### 8.2 Deployment Preparation
+
 - Build optimization
 - Static hosting setup (Netlify/Vercel/GitHub Pages)
 - Environment configuration
 
 ### JSON File Format Expected
+
 ```json
 {
   "personal": [
@@ -501,6 +528,7 @@ const boardRef = useRef(null);                          // PDF export ref
 ```
 
 ### Development Priority Order
+
 1. **Setup & Core Components** (Steps 1-2)
 2. **Business Logic** (Step 3)
 3. **Main App Integration** (Step 4)

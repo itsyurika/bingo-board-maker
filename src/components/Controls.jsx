@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import styles from '../styles/Controls.module.css'
+import { useRef } from 'react';
+import styles from '../styles/Controls.module.css';
 
 /**
  * Control panel component with enhanced state management and user feedback.
@@ -16,11 +16,11 @@ import styles from '../styles/Controls.module.css'
  * @param {boolean} includeFreeSpace - Whether to include free space in board
  * @param {Function} onFreeSpaceToggle - Callback to toggle free space setting
  */
-function Controls({ 
-  onFileUpload, 
-  onRecreate, 
-  onDownloadPdf, 
-  appStatus = {}, 
+function Controls({
+  onFileUpload,
+  onRecreate,
+  onDownloadPdf,
+  appStatus = {},
   loadingState = { isLoading: false, message: '' },
   error = null,
   successMessage = null,
@@ -29,29 +29,29 @@ function Controls({
   includeFreeSpace = true,
   onFreeSpaceToggle
 }) {
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null);
 
   /**
    * Handle file selection from input
    */
   const handleFileChange = (event) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file && file.type === 'application/json') {
-      onFileUpload(file)
+      onFileUpload(file);
     } else {
-      alert('Please select a valid JSON file.')
+      alert('Please select a valid JSON file.');
     }
-  }
+  };
 
   /**
    * Trigger file input click
    */
   const handleUploadClick = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
-  const { isReady, fileName, stats } = appStatus
-  const { isLoading, message } = loadingState
+  const { isReady, fileName, stats } = appStatus;
+  const { isLoading, message } = loadingState;
 
   return (
     <div className={styles.controls}>
@@ -61,7 +61,7 @@ function Controls({
           ❌ {error}
         </div>
       )}
-      
+
       {successMessage && (
         <div className={styles.message + ' ' + styles.success}>
           ✅ {successMessage}
@@ -83,7 +83,7 @@ function Controls({
 
       {/* Loading Status */}
       {isLoading && (
-        <div className={styles.loading}>
+        <div className={styles.loading} role="status">
           <div className={styles.spinner}></div>
           {message}
         </div>
@@ -94,8 +94,9 @@ function Controls({
         <div className={styles.headerSection}>
           <h3 className={styles.sectionTitle}>Customize Header</h3>
           <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Title:</label>
+            <label htmlFor="title-input" className={styles.inputLabel}>Title:</label>
             <input
+              id="title-input"
               type="text"
               value={headerText.title || ''}
               onChange={(e) => onHeaderTextChange('title', e.target.value)}
@@ -104,8 +105,9 @@ function Controls({
             />
           </div>
           <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Instructions:</label>
+            <label htmlFor="instructions-input" className={styles.inputLabel}>Instructions:</label>
             <input
+              id="instructions-input"
               type="text"
               value={headerText.instructions || ''}
               onChange={(e) => onHeaderTextChange('instructions', e.target.value)}
@@ -114,8 +116,9 @@ function Controls({
             />
           </div>
           <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Subtitle:</label>
+            <label htmlFor="subtitle-input" className={styles.inputLabel}>Subtitle:</label>
             <input
+              id="subtitle-input"
               type="text"
               value={headerText.subtitle || ''}
               onChange={(e) => onHeaderTextChange('subtitle', e.target.value)}
@@ -123,7 +126,7 @@ function Controls({
               placeholder="Enter subtitle..."
             />
           </div>
-          
+
           {onFreeSpaceToggle && (
             <div className={styles.checkboxGroup}>
               <label className={styles.checkboxLabel}>
@@ -148,7 +151,8 @@ function Controls({
           onChange={handleFileChange}
           className={styles.hiddenInput}
         />
-        <button 
+        <button
+          type="button"
           onClick={handleUploadClick}
           disabled={isLoading}
           className={`${styles.button} ${styles.uploadButton}`}
@@ -159,6 +163,7 @@ function Controls({
 
       <div className={styles.actionSection}>
         <button
+          type="button"
           onClick={onRecreate}
           disabled={!isReady || isLoading}
           className={`${styles.button} ${styles.recreateButton}`}
@@ -166,8 +171,9 @@ function Controls({
         >
           {isLoading ? 'Generating...' : 'Recreate Board'}
         </button>
-        
+
         <button
+          type="button"
           onClick={onDownloadPdf}
           disabled={isLoading}
           className={`${styles.button} ${styles.downloadButton}`}
@@ -177,7 +183,7 @@ function Controls({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default Controls
+export default Controls;

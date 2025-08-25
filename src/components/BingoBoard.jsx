@@ -1,7 +1,7 @@
-import { forwardRef } from 'react'
-import BingoTile from './BingoTile'
-import Header from './Header'
-import styles from '../styles/BingoBoard.module.css'
+import { forwardRef } from 'react';
+import styles from '../styles/BingoBoard.module.css';
+import BingoTile from './BingoTile';
+import Header from './Header';
 
 /**
  * 5x5 bingo board grid component with integrated header that renders tiles and supports PDF export.
@@ -13,9 +13,9 @@ import styles from '../styles/BingoBoard.module.css'
  */
 const BingoBoard = forwardRef(({ tiles = [], includeHeader = true, headerText }, ref) => {
   // Ensure we have exactly 25 tiles, fill with empty strings if needed
-  const boardTiles = Array(25).fill('').map((_, index) => 
-    tiles[index] || ''
-  )
+  const boardTiles = Array(25).fill('').map((_, index) =>
+    (tiles && tiles[index]) || ''
+  );
 
   return (
     <div ref={ref} className={styles.boardContainer}>
@@ -24,10 +24,10 @@ const BingoBoard = forwardRef(({ tiles = [], includeHeader = true, headerText },
           <Header {...headerText} />
         </div>
       )}
-      
+
       <div className={styles.board}>
         {boardTiles.map((text, index) => (
-          <BingoTile 
+          <BingoTile
             key={index}
             text={text}
             isFreeSpace={text === 'FREE_SPACE'} // Free space based on tile content
@@ -35,9 +35,9 @@ const BingoBoard = forwardRef(({ tiles = [], includeHeader = true, headerText },
         ))}
       </div>
     </div>
-  )
-})
+  );
+});
 
-BingoBoard.displayName = 'BingoBoard'
+BingoBoard.displayName = 'BingoBoard';
 
-export default BingoBoard
+export default BingoBoard;
