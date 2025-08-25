@@ -1,0 +1,324 @@
+/* Error Display Styles */
+
+.errorContainer {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  margin: 1rem 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+.errorHeader {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  gap: 0.75rem;
+}
+
+.errorIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.errorContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.errorMessage {
+  color: #991b1b;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+.errorMessage strong {
+  font-weight: 600;
+}
+
+.errorCode {
+  color: #7f1d1d;
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+  opacity: 0.8;
+}
+
+.errorActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.detailsButton,
+.dismissButton {
+  background: none;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #991b1b;
+  transition: all 0.2s ease;
+}
+
+.detailsButton:hover,
+.dismissButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.detailsButton:active,
+.dismissButton:active {
+  transform: scale(0.95);
+}
+
+/* Error Details */
+.errorDetails {
+  border-top: 1px solid #fca5a5;
+  padding: 1rem;
+  background: rgba(254, 242, 242, 0.5);
+  animation: expandDown 0.3s ease-out;
+}
+
+.suggestion {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  color: #1e40af;
+  font-size: 0.9rem;
+}
+
+.suggestion strong {
+  color: #1d4ed8;
+}
+
+.issues,
+.duplicates,
+.stats,
+.technicalError {
+  margin: 1rem 0;
+}
+
+.issues strong,
+.duplicates strong,
+.stats strong,
+.technicalError strong {
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.issuesList,
+.duplicatesList,
+.statsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.issueItem,
+.duplicateItem,
+.statsList li {
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid #f87171;
+  font-size: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category {
+  background: #ddd6fe;
+  color: #5b21b6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.index {
+  background: #fde68a;
+  color: #92400e;
+  padding: 0.125rem 0.375rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.issueText {
+  color: #991b1b;
+  flex: 1;
+  min-width: 200px;
+}
+
+.promptSnippet {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #374151;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.duplicateCategories {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.moreIssues {
+  text-align: center;
+  padding: 0.5rem;
+  color: #6b7280;
+  font-style: italic;
+  background: #f9fafb;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.statsList li {
+  border-left-color: #6366f1;
+  background: #f8fafc;
+}
+
+.technicalError .errorCode {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #374151;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* Simple Error Display */
+.simpleError {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  color: #991b1b;
+  animation: slideIn 0.3s ease-out;
+}
+
+.simpleError .errorIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.simpleError .errorMessage {
+  flex: 1;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.simpleError .dismissButton {
+  background: none;
+  border: none;
+  color: #991b1b;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.simpleError .dismissButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandDown {
+  from {
+    opacity: 0;
+    transform: scaleY(0.95);
+    transform-origin: top;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .errorHeader {
+    padding: 0.75rem;
+  }
+  
+  .errorDetails {
+    padding: 0.75rem;
+  }
+  
+  .errorMessage {
+    font-size: 0.9rem;
+  }
+  
+  .issueItem,
+  .duplicateItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .promptSnippet {
+    max-width: 100%;
+    font-size: 0.75rem;
+  }
+  
+  .issueText {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .errorActions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .detailsButton,
+  .dismissButton {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.375rem;
+  }
+  
+  .suggestion {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}

@@ -1,365 +1,238 @@
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import Controls from './components/Controls';
-import BingoBoard from './components/BingoBoard';
-import { generateBoardFromFile, generateBoard } from './utils/boardGenerator';
-import { exportToPdf, isPdfExportSupported } from './utils/pdfExport';
-import styles from './styles/App.module.css';
+import { useRef, useCallback, useMemo, useEffect, useState } from 'react'
+import Controls from './components/Controls'
+import BingoBoard from './components/BingoBoard'
+import ErrorDisplay from './components/ErrorDisplay'
+import { generateBoard } from './utils/boardGenerator'
+import { generateSampleTiles } from './data/sampleTiles'
+import { handleFileUpload } from './utils/fileHandlers'
+import { handlePdfExport, generatePdfFilename } from './utils/pdfHandlers'
+import { initializeBrowserSupport } from './utils/browserSupport'
+import { ValidationError } from './utils/validation'
+import { useBoardState } from './hooks/useBoardState'
+import { useUIState } from './hooks/useUIState'
+import { useHeaderState } from './hooks/useHeaderState'
+import { LOADING_MESSAGES } from './constants/defaults'
+import styles from './styles/App.module.css'
 
 function App() {
-  // Core state management
-  const [prompts, setPrompts] = useState(null);
-  const [boardTiles, setBoardTiles] = useState([]);
-  const [originalFileName, setOriginalFileName] = useState('');
-
-  // Header customization state
-  const [headerText, setHeaderText] = useState({
-    title: "🌞 2025 Priceline Summer Party 🏖️",
-    instructions: "You can use the same person only twice and can't use your own name! ✨",
-    subtitle: "🔍 Find someone who..."
-  });
-
-  // Board configuration state
-  const [includeFreeSpace, setIncludeFreeSpace] = useState(true);
-
-  // UI state management  
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('');
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');
-
-  // Statistics and metadata
-  const [boardStats, setBoardStats] = useState({
-    totalPrompts: 0,
-    categories: [],
-    generatedAt: null,
-    version: 1
-  });
-
+  // Custom hooks for state management
+  const boardState = useBoardState()
+  const uiState = useUIState()
+  const headerState = useHeaderState()
+  
+  // Board configuration
+  const [includeFreeSpace, setIncludeFreeSpace] = useState(true)
+  
+  // Browser support and warnings
+  const [browserSupport, setBrowserSupport] = useState(null)
+  const [warnings, setWarnings] = useState([])
+  
   // Refs for PDF export
-  const boardRef = useRef(null);
-  const previewRef = useRef(null);
+  const boardRef = useRef(null)
+  const previewRef = useRef(null)
 
-  /**
-   * Clear all messages after a delay
-   */
-  const clearMessages = useCallback(() => {
-    setTimeout(() => {
-      setError(null);
-      setSuccessMessage('');
-    }, 5000); // Clear after 5 seconds
-  }, []);
-
-  /**
-   * Update board statistics when prompts change
-   */
-  const updateBoardStats = useCallback((promptsData, version = 1) => {
-    const categories = Object.keys(promptsData);
-    const totalPrompts = categories.reduce((sum, cat) => sum + promptsData[cat].length, 0);
-
-    setBoardStats({
-      totalPrompts,
-      categories,
-      generatedAt: new Date().toISOString(),
-      version
-    });
-  }, []);
-
-  /**
-   * Reset application state
-   */
-  const resetAppState = useCallback(() => {
-    setPrompts(null);
-    setBoardTiles([]);
-    setOriginalFileName('');
-    setError(null);
-    setSuccessMessage('');
-    setBoardStats({
-      totalPrompts: 0,
-      categories: [],
-      generatedAt: null,
-      version: 1
-    });
-  }, []);
-
-  /**
-   * Update header text values
-   */
-  const updateHeaderText = useCallback((field, value) => {
-    setHeaderText(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  }, []);
+  // Initialize browser support checking
+  useEffect(() => {
+    const support = initializeBrowserSupport()
+    setBrowserSupport(support)
+    
+    if (!support.supported) {
+      uiState.showError(support.error)
+    }
+  }, [])
 
   /**
    * Regenerate board when Free Space setting changes (if prompts are loaded)
    */
   useEffect(() => {
-    if (prompts && boardTiles.length > 0) {
-      // Only regenerate if we have prompts and a board is already displayed
+    if (boardState.prompts && boardState.boardTiles.length > 0) {
       try {
-        const newTiles = generateBoard(prompts, includeFreeSpace);
-        setBoardTiles(newTiles);
-
-        // Update stats to reflect the change (keep same version since it's the same prompts)
-        updateBoardStats(prompts, boardStats.version);
-        console.log('Board regenerated due to Free Space setting change');
+        const newTiles = generateBoard(boardState.prompts, includeFreeSpace)
+        boardState.setBoardTiles(newTiles)
+        boardState.updateBoardStats(boardState.prompts, boardState.boardStats.version)
+        console.log('Board regenerated due to Free Space setting change')
       } catch (err) {
-        console.error('Error regenerating board after Free Space change:', err);
-        setError(err.message);
-        clearMessages();
+        console.error('Error regenerating board after Free Space change:', err)
+        uiState.showError(err.message)
       }
     }
-  }, [includeFreeSpace]);
+  }, [includeFreeSpace])
 
   /**
    * Handle JSON file upload and generate initial board
    */
-  const handleFileUpload = useCallback(async (file) => {
-    setIsLoading(true);
-    setLoadingMessage('Processing JSON file...');
-    setError(null);
-    setSuccessMessage('');
-
+  const handleFileUploadWrapper = useCallback(async (file) => {
     try {
-      console.log('Processing file:', file.name);
+      const { tiles, promptsData, warnings: uploadWarnings } = await handleFileUpload(
+        file, 
+        includeFreeSpace, 
+        {
+          setLoadingState: uiState.setLoadingState,
+          showError: uiState.showError
+        }
+      )
 
-      // Validate file
-      if (!file.name.toLowerCase().endsWith('.json')) {
-        throw new Error('Please select a valid JSON file');
-      }
+      // Update board state
+      boardState.setPrompts(promptsData)
+      boardState.setBoardTiles(tiles)
+      boardState.setOriginalFileName(file.name)
+      boardState.updateBoardStats(promptsData, 1)
 
-      if (file.size > 1024 * 1024) { // 1MB limit
-        throw new Error('File too large. Please use a file smaller than 1MB.');
-      }
+      // Set warnings from upload
+      setWarnings(uploadWarnings || [])
 
-      setLoadingMessage('Parsing prompts...');
-
-      // Parse file and generate board
-      const tiles = await generateBoardFromFile(file, includeFreeSpace);
-
-      setLoadingMessage('Generating bingo board...');
-
-      // Parse file again to store prompts data for regeneration
-      const fileText = await file.text();
-      const promptsData = JSON.parse(fileText);
-
-      // Update state
-      setPrompts(promptsData);
-      setBoardTiles(tiles);
-      setOriginalFileName(file.name);
-      updateBoardStats(promptsData, 1);
-
-      setSuccessMessage(`Successfully generated bingo board from ${file.name}`);
-      console.log('Board generated successfully with', tiles.length, 'tiles');
-
-      // Clear success message after delay
-      clearMessages();
-
+      uiState.showSuccess(`Successfully generated bingo board from ${file.name}`)
+      
     } catch (err) {
-      console.error('File upload error:', err);
-      setError(err.message);
-      clearMessages();
-
-    } finally {
-      setIsLoading(false);
-      setLoadingMessage('');
+      // Clear any previous warnings on error
+      setWarnings([])
+      
+      // Show detailed error with ErrorDisplay component
+      if (err instanceof ValidationError) {
+        uiState.showError(err)
+      } else {
+        // Convert regular errors to a more user-friendly format
+        const friendlyError = new ValidationError(
+          err.message || 'An unexpected error occurred',
+          'UPLOAD_ERROR',
+          {
+            suggestion: 'Please check your file and try again. Make sure it\'s a valid JSON file with the correct format.'
+          }
+        )
+        uiState.showError(friendlyError)
+      }
     }
-  }, [includeFreeSpace, updateBoardStats, clearMessages]);
+  }, [includeFreeSpace, boardState, uiState])
 
   /**
    * Generate new board with same prompts
    */
   const handleRecreate = useCallback(() => {
-    if (!prompts) {
-      console.warn('No prompts available for recreation');
-      setError('No prompts loaded. Please upload a JSON file first.');
-      clearMessages();
-      return;
+    if (!boardState.prompts) {
+      console.warn('No prompts available for recreation')
+      uiState.showError('No prompts loaded. Please upload a JSON file first.')
+      return
     }
 
-    setIsLoading(true);
-    setLoadingMessage('Generating new board...');
-    setError(null);
-    setSuccessMessage('');
-
+    uiState.setLoadingState(true, LOADING_MESSAGES.RECREATING_BOARD)
+    
     try {
-      const newTiles = generateBoard(prompts, includeFreeSpace);
-      setBoardTiles(newTiles);
+      const newTiles = generateBoard(boardState.prompts, includeFreeSpace)
+      boardState.setBoardTiles(newTiles)
 
       // Update stats with new version
-      const newVersion = boardStats.version + 1;
-      updateBoardStats(prompts, newVersion);
+      const newVersion = boardState.boardStats.version + 1
+      boardState.updateBoardStats(boardState.prompts, newVersion)
 
-      setSuccessMessage(`Board recreated successfully (Version ${newVersion})`);
-      console.log('Board recreated successfully');
-
-      clearMessages();
-
+      uiState.showSuccess(`Board recreated successfully (Version ${newVersion})`)
+      console.log('Board recreated successfully')
+      
     } catch (err) {
-      console.error('Board recreation error:', err);
-      setError(err.message);
-      clearMessages();
-
+      console.error('Board recreation error:', err)
+      uiState.showError(err.message)
     } finally {
-      setIsLoading(false);
-      setLoadingMessage('');
+      uiState.setLoadingState(false)
     }
-  }, [prompts, includeFreeSpace, boardStats.version, updateBoardStats, clearMessages]);
+  }, [boardState, uiState, includeFreeSpace])
 
   /**
    * Export current board as PDF
    */
   const handleDownloadPdf = useCallback(async () => {
-    console.log('PDF export initiated');
-
     // Use preview ref if no actual board is generated yet (for testing)
-    const elementToExport = boardRef.current || previewRef.current;
-    const isPreview = !boardRef.current && previewRef.current;
+    const elementToExport = boardRef.current || previewRef.current
+    const isPreview = !boardRef.current && previewRef.current
+    
+    const filename = generatePdfFilename(
+      boardState.originalFileName, 
+      boardState.boardStats.version, 
+      isPreview
+    )
 
-    if (!elementToExport) {
-      console.error('No board reference available');
-      setError('Board not ready for export. Please try again.');
-      clearMessages();
-      return;
-    }
-
-    if (!isPdfExportSupported()) {
-      console.error('PDF export not supported');
-      setError('PDF export is not supported in this browser. Please try a different browser.');
-      clearMessages();
-      return;
-    }
-
-    setIsLoading(true);
-    setLoadingMessage('Preparing PDF export...');
-    setError(null);
-    setSuccessMessage('');
-
-    try {
-      setLoadingMessage('Capturing board image...');
-
-      // Generate filename based on current state
-      const timestamp = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-      const baseFileName = originalFileName
-        ? originalFileName.replace('.json', '')
-        : 'Priceline-Summer-Party-Bingo';
-      const versionSuffix = boardStats.version > 1 ? `-v${boardStats.version}` : '';
-      const previewSuffix = isPreview ? '-preview' : '';
-      const filename = `${baseFileName}${versionSuffix}${previewSuffix}-${timestamp}`;
-
-      setLoadingMessage('Generating PDF...');
-
-      console.log('Exporting PDF with filename:', filename);
-      await exportToPdf(elementToExport, filename);
-
-      setSuccessMessage(`PDF exported successfully as ${filename}.pdf`);
-      console.log('PDF export completed successfully');
-
-      clearMessages();
-
-    } catch (err) {
-      console.error('PDF export error:', err);
-      setError(`PDF export failed: ${err.message}`);
-      clearMessages();
-
-    } finally {
-      setIsLoading(false);
-      setLoadingMessage('');
-    }
-  }, [boardStats.version, originalFileName, clearMessages]);
-
-  // Sample tiles for preview - dynamic based on includeFreeSpace setting
-  const sampleTiles = useMemo(() => {
-    const baseTiles = [
-      'has traveled to more than 5 countries',
-      'speaks more than 2 languages',
-      'has run a marathon',
-      'owns more than 3 pets',
-      'can play a musical instrument',
-      'has appeared on TV',
-      'has worked here for over 5 years',
-      'has given a presentation to executives',
-      'leads a team of more than 10 people',
-      'has been skydiving',
-      'knows how to juggle',
-      'has met a celebrity',
-      'can speak 3+ languages',
-      'has been to all 7 continents',
-      'plays in a band',
-      'has written a book',
-      'can solve a Rubik\'s cube',
-      'has climbed a mountain',
-      'knows sign language',
-      'has been on a cruise',
-      'can cook without recipes',
-      'has won a contest',
-      'has been in a movie',
-      'can do a backflip',
-      'has a pet cat',
-      'has won a contest or competition'
-    ];
-
-    if (includeFreeSpace) {
-      // Insert FREE_SPACE at center (index 12) and use 24 prompts
-      const tiles = Array(25).fill('');
-      let promptIndex = 0;
-      for (let i = 0; i < 25; i++) {
-        if (i === 12) {
-          tiles[i] = 'FREE_SPACE';
-        } else {
-          tiles[i] = baseTiles[promptIndex];
-          promptIndex++;
-        }
+    await handlePdfExport(
+      elementToExport, 
+      filename, 
+      {
+        setLoadingState: uiState.setLoadingState,
+        showError: uiState.showError,
+        showSuccess: uiState.showSuccess
       }
-      return tiles;
-    } else {
-      // Use all 25 prompts, no free space
-      return baseTiles;
-    }
-  }, [includeFreeSpace]);
+    )
+  }, [boardState.originalFileName, boardState.boardStats.version, uiState])
+
+  // Sample tiles for preview - memoized
+  const sampleTiles = useMemo(() => 
+    generateSampleTiles(includeFreeSpace), 
+    [includeFreeSpace]
+  )
 
   // Computed values with memoization
-  const boardIsReady = useMemo(() => boardTiles.length > 0, [boardTiles.length]);
-
+  const boardIsReady = useMemo(() => 
+    boardState.boardTiles.length > 0, 
+    [boardState.boardTiles.length]
+  )
+  
   const appStatus = useMemo(() => ({
-    hasPrompts: !!prompts,
-    hasBoardTiles: boardTiles.length > 0,
+    hasPrompts: !!boardState.prompts,
+    hasBoardTiles: boardState.boardTiles.length > 0,
     isReady: boardIsReady,
-    fileName: originalFileName,
-    stats: boardStats
-  }), [prompts, boardTiles.length, boardIsReady, originalFileName, boardStats]);
+    fileName: boardState.originalFileName,
+    stats: boardState.boardStats
+  }), [boardState.prompts, boardState.boardTiles.length, boardIsReady, boardState.originalFileName, boardState.boardStats])
 
-  // Loading state with message
   const loadingState = useMemo(() => ({
-    isLoading,
-    message: loadingMessage || 'Loading...'
-  }), [isLoading, loadingMessage]);
+    isLoading: uiState.isLoading,
+    message: uiState.loadingMessage || 'Loading...'
+  }), [uiState.isLoading, uiState.loadingMessage])
 
   return (
     <div className={styles.app}>
       <div className={styles.container}>
+        {/* Enhanced Error Display */}
+        {uiState.error && (
+          <ErrorDisplay 
+            error={uiState.error} 
+            onDismiss={() => uiState.showError(null)}
+          />
+        )}
+
+        {/* Warnings Display */}
+        {warnings.length > 0 && (
+          <div className={styles.warningsContainer}>
+            {warnings.map((warning, index) => (
+              <div key={index} className={styles.warning}>
+                <span className={styles.warningIcon}>⚠️</span>
+                <div className={styles.warningContent}>
+                  <strong>{warning.message}</strong>
+                  {warning.details && <div className={styles.warningDetails}>{warning.details}</div>}
+                  {warning.suggestion && <div className={styles.warningSuggestion}>{warning.suggestion}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <Controls
-          onFileUpload={handleFileUpload}
+          onFileUpload={handleFileUploadWrapper}
           onRecreate={handleRecreate}
           onDownloadPdf={handleDownloadPdf}
           appStatus={appStatus}
           loadingState={loadingState}
-          error={error}
-          successMessage={successMessage}
-          headerText={headerText}
-          onHeaderTextChange={updateHeaderText}
+          error={null} // We handle errors separately now
+          successMessage={uiState.successMessage}
+          headerText={headerState.headerText}
+          onHeaderTextChange={headerState.updateHeaderText}
           includeFreeSpace={includeFreeSpace}
           onFreeSpaceToggle={setIncludeFreeSpace}
         />
 
         <div className={styles.boardSection}>
-          {boardTiles.length > 0 ? (
+          {boardState.boardTiles.length > 0 ? (
             <BingoBoard
               ref={boardRef}
-              tiles={boardTiles}
+              tiles={boardState.boardTiles}
               includeHeader={true}
-              headerText={headerText}
+              headerText={headerState.headerText}
             />
           ) : (
             <div className={styles.emptyState}>
@@ -372,7 +245,7 @@ function App() {
                 ref={previewRef}
                 tiles={sampleTiles}
                 includeHeader={true}
-                headerText={headerText}
+                headerText={headerState.headerText}
               />
               <p className={styles.emptyStateText}>
                 <em>↑ Preview with sample data</em>
@@ -382,7 +255,7 @@ function App() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
