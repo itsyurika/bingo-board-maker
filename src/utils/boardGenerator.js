@@ -51,7 +51,8 @@ function validatePromptsData(data) {
 /**
  * Generate bingo board from JSON prompts
  * @param {Object} prompts - Categorized prompts from JSON
- * @returns {string[]} Array of 25 tiles (24 prompts + 1 free space)
+ * @param {boolean} includeFreeSpace - Whether to include a free space (default: true)
+ * @returns {string[]} Array of 25 tiles (24 prompts + 1 free space, or 25 prompts if no free space)
  * @throws {Error} If prompts data is invalid
  * 
  * @example
@@ -60,18 +61,21 @@ function validatePromptsData(data) {
  *   work: ['has led a team', 'has given presentations'],
  *   hobbies: ['plays an instrument', 'enjoys cooking']
  * }
- * const board = generateBoard(prompts)
+ * const board = generateBoard(prompts, true)
  * // Returns array of 25 strings with 'FREE_SPACE' at index 12
+ * const boardNoFree = generateBoard(prompts, false)
+ * // Returns array of 25 prompts, no free space
  */
-export function generateBoard(prompts) {
+export function generateBoard(prompts, includeFreeSpace = true) {
   // Validate input data
   validatePromptsData(prompts)
 
   // Extract categories and calculate distribution
   const categories = Object.keys(prompts)
   const totalCategories = categories.length
-  const promptsPerCategory = Math.floor(24 / totalCategories)
-  const remainderPrompts = 24 % totalCategories
+  const totalTilesNeeded = includeFreeSpace ? 24 : 25
+  const promptsPerCategory = Math.floor(totalTilesNeeded / totalCategories)
+  const remainderPrompts = totalTilesNeeded % totalCategories
 
   const selectedPrompts = []
 
@@ -94,7 +98,7 @@ export function generateBoard(prompts) {
   })
 
   // If we still need more prompts (edge case), fill from random categories
-  while (selectedPrompts.length < 24) {
+  while (selectedPrompts.length < totalTilesNeeded) {
     const randomCategory = categories[Math.floor(Math.random() * categories.length)]
     const availablePrompts = prompts[randomCategory].filter(
       prompt => !selectedPrompts.includes(prompt)
@@ -106,23 +110,30 @@ export function generateBoard(prompts) {
     }
   }
 
-  // Trim to exactly 24 if we somehow got more
-  const finalPrompts = selectedPrompts.slice(0, 24)
+  // Trim to exactly the needed amount if we somehow got more
+  const finalPrompts = selectedPrompts.slice(0, totalTilesNeeded)
 
   // Shuffle the final prompts for random board placement
   const shuffledPrompts = shuffleArray(finalPrompts)
 
-  // Create 25-item array with free space at center (index 12)
+  // Create 25-item array
   const boardTiles = Array(25).fill('')
   
-  // Fill positions 0-11 and 13-24, leaving 12 for free space
-  let promptIndex = 0
-  for (let i = 0; i < 25; i++) {
-    if (i === 12) {
-      boardTiles[i] = 'FREE_SPACE' // Special marker for free space
-    } else {
-      boardTiles[i] = shuffledPrompts[promptIndex]
-      promptIndex++
+  if (includeFreeSpace) {
+    // Fill positions 0-11 and 13-24, leaving 12 for free space
+    let promptIndex = 0
+    for (let i = 0; i < 25; i++) {
+      if (i === 12) {
+        boardTiles[i] = 'FREE_SPACE' // Special marker for free space
+      } else {
+        boardTiles[i] = shuffledPrompts[promptIndex]
+        promptIndex++
+      }
+    }
+  } else {
+    // Fill all 25 positions with prompts (no free space)
+    for (let i = 0; i < 25; i++) {
+      boardTiles[i] = shuffledPrompts[i]
     }
   }
 
@@ -132,14 +143,15 @@ export function generateBoard(prompts) {
 /**
  * Parse JSON file and generate board
  * @param {File} file - JSON file from file input
+ * @param {boolean} includeFreeSpace - Whether to include a free space (default: true)
  * @returns {Promise<string[]>} Promise resolving to board tiles array
  * @throws {Error} If file parsing or board generation fails
  */
-export async function generateBoardFromFile(file) {
+export async function generateBoardFromFile(file, includeFreeSpace = true) {
   try {
     const fileText = await file.text()
     const promptsData = JSON.parse(fileText)
-    return generateBoard(promptsData)
+    return generateBoard(promptsData, includeFreeSpace)
   } catch (error) {
     if (error instanceof SyntaxError) {
       throw new Error('Invalid JSON file: Please check file format and try again')

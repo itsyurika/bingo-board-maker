@@ -1,1 +1,1 @@
-feat(ui): add header customization inputs for real-time text editing
+fix(board): implement working Free Space toggle functionality

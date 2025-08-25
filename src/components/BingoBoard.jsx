@@ -30,7 +30,7 @@ const BingoBoard = forwardRef(({ tiles = [], includeHeader = true, headerText },
           <BingoTile 
             key={index}
             text={text}
-            isFreeSpace={index === 12} // Center tile (index 12) is always free space
+            isFreeSpace={text === 'FREE_SPACE'} // Free space based on tile content
           />
         ))}
       </div>

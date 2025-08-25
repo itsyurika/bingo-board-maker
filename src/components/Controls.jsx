@@ -13,6 +13,8 @@ import styles from '../styles/Controls.module.css'
  * @param {string} successMessage - Current success message
  * @param {Object} headerText - Current header text values
  * @param {Function} onHeaderTextChange - Callback to update header text
+ * @param {boolean} includeFreeSpace - Whether to include free space in board
+ * @param {Function} onFreeSpaceToggle - Callback to toggle free space setting
  */
 function Controls({ 
   onFileUpload, 
@@ -23,7 +25,9 @@ function Controls({
   error = null,
   successMessage = null,
   headerText = {},
-  onHeaderTextChange
+  onHeaderTextChange,
+  includeFreeSpace = true,
+  onFreeSpaceToggle
 }) {
   const fileInputRef = useRef(null)
 
@@ -119,6 +123,20 @@ function Controls({
               placeholder="Enter subtitle..."
             />
           </div>
+          
+          {onFreeSpaceToggle && (
+            <div className={styles.checkboxGroup}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={includeFreeSpace}
+                  onChange={(e) => onFreeSpaceToggle(e.target.checked)}
+                  className={styles.checkbox}
+                />
+                <span className={styles.checkboxText}>Include Free Space tile</span>
+              </label>
+            </div>
+          )}
         </div>
       )}
 
